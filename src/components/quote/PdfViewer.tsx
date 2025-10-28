@@ -22,24 +22,37 @@ export const PdfViewer = ({ quoteId, pdfUrl }: PdfViewerProps) => {
 
     const load = async () => {
       try {
-        // Use proxy approach: fetch as blob to avoid signature issues
+        // Use proxy approach: fetch as blob to avoid signature issues and auto-download
         const res = await fetch(originalPdfUrl, { 
           credentials: "omit",
-          mode: 'cors'
+          mode: 'cors',
+          headers: {
+            'Accept': 'application/pdf,application/octet-stream,*/*',
+          }
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        // Check if response is actually a PDF
+        const contentType = res.headers.get('content-type');
+        if (!contentType || !contentType.includes('pdf')) {
+          throw new Error('Response is not a PDF file');
+        }
+        
         const blob = await res.blob();
         if (cancelled) return;
+        
+        // Create blob URL to prevent auto-download
         const url = URL.createObjectURL(blob);
         revokedUrl = url;
         setBlobUrl(url);
       } catch (e) {
         if (cancelled) return;
+        console.error('PDF load error:', e);
         setLoadError((e as Error).message);
       }
     };
     
-    // Only try blob approach if we have a real PDF URL
+    // Always try blob approach for real PDF URLs to prevent auto-download
     if (pdfUrl && pdfUrl !== fallbackPdf) {
       load();
     } else {
@@ -53,9 +66,13 @@ export const PdfViewer = ({ quoteId, pdfUrl }: PdfViewerProps) => {
   }, [originalPdfUrl, pdfUrl]);
 
   const displayPdfUrl = useMemo(() => {
-    // Use blob URL if available, otherwise fallback to original URL
-    return blobUrl || originalPdfUrl;
-  }, [blobUrl, originalPdfUrl]);
+    // Always prefer blob URL to prevent auto-download issues
+    // Only fallback to original URL if blob loading failed and we're using fallback PDF
+    if (blobUrl) return blobUrl;
+    if (pdfUrl === fallbackPdf) return originalPdfUrl;
+    // For real PDF URLs, don't use original URL if blob failed to prevent auto-download
+    return null;
+  }, [blobUrl, originalPdfUrl, pdfUrl]);
 
   const handleDownload = () => {
     const link = document.createElement('a');
@@ -102,19 +119,48 @@ export const PdfViewer = ({ quoteId, pdfUrl }: PdfViewerProps) => {
       </CardHeader>
       <CardContent className="p-4 sm:p-6">
         <div className="w-full h-[400px] sm:h-[500px] lg:h-[600px] border border-border rounded-lg overflow-hidden bg-muted/30">
-          <iframe
-            src={`${displayPdfUrl}#toolbar=1&navpanes=1&scrollbar=1`}
-            className="w-full h-full"
-            title={`Báo giá ${quoteId}`}
-            style={{ border: 'none' }}
-          />
+          {displayPdfUrl ? (
+            <iframe
+              src={`${displayPdfUrl}#toolbar=1&navpanes=1&scrollbar=1`}
+              className="w-full h-full"
+              title={`Báo giá ${quoteId}`}
+              style={{ border: 'none' }}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center flex-col gap-4">
+              <div className="text-muted-foreground text-center">
+                <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">Đang tải file PDF...</p>
+                {loadError && (
+                  <p className="text-xs text-destructive mt-2">
+                    Không thể tải PDF trực tiếp
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDownload}
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Tải xuống
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleOpenExternal}
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Mở trong tab mới
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
-        {loadError && (
-          <p className="text-xs sm:text-sm text-destructive mt-2 text-center">
-            Không thể hiển thị PDF trực tiếp (lỗi: {loadError}). Bạn có thể dùng nút "Mở rộng" để xem file.
-          </p>
-        )}
-        {!loadError && (
+        {displayPdfUrl && !loadError && (
           <p className="text-xs sm:text-sm text-muted-foreground mt-2 text-center">
             Nếu PDF không hiển thị, vui lòng{' '}
             <button

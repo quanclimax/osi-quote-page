@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/ui/header";
 import { QuoteHeader } from "@/components/quote/QuoteHeader";
 import { PdfViewer } from "@/components/quote/PdfViewer";
+import { QuoteNotes } from "@/components/quote/QuoteNotes";
 import { QuoteActions } from "@/components/quote/QuoteActions";
 import { fetchQuoteById } from "@/lib/api";
 
@@ -34,6 +35,7 @@ export default function Quote() {
       companyName: data.customer_name,
       date: dateStr,
       pdfUrl: data.quote_file?.file_url,
+      saleNote: data.sale_note,
       recordId: data.record_id,
     };
   }, [data]);
@@ -72,6 +74,8 @@ export default function Quote() {
         )}
 
         {mapped && <PdfViewer quoteId={mapped.id} pdfUrl={mapped.pdfUrl} />}
+
+        {mapped && <QuoteNotes notes={mapped.saleNote} />}
 
         {mapped && currentStatus === "pending" && (
           <QuoteActions

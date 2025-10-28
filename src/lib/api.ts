@@ -12,6 +12,7 @@ export interface QuoteApiData {
   personal_email: string;
   company_email: string;
   description: string;
+  sale_note?: string;
   quote_file: QuoteFileInfo;
   record_id: string;
 }
