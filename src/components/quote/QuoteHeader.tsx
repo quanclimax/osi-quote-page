@@ -47,7 +47,7 @@ export const QuoteHeader = ({
               <p className="font-medium text-sm sm:text-base truncate">{customerName}</p>
             </div>
           </div>
-          {/* <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg flex-shrink-0">
               <Building className="h-4 w-4 text-primary" />
             </div>
@@ -56,7 +56,7 @@ export const QuoteHeader = ({
               <p className="font-medium text-sm sm:text-base truncate">{companyName}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 sm:col-span-2 lg:col-span-1">
+          {/* <div className="flex items-center gap-3 sm:col-span-2 lg:col-span-1">
             <div className="p-2 bg-primary/10 rounded-lg flex-shrink-0">
               <Calendar className="h-4 w-4 text-primary" />
             </div>
