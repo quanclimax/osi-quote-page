@@ -82,7 +82,7 @@ export const QuoteActions = ({ quoteId, recordId, onConfirm, onRequestRevision }
       <Card className="border-primary/20 mx-2 sm:mx-0">
         <CardHeader className="p-4 sm:p-6">
           <CardTitle className="text-primary text-center text-lg sm:text-xl">
-            Xác nhận báo giá
+            Bạn có đồng ý mua hàng với báo giá này không?
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
@@ -106,7 +106,7 @@ export const QuoteActions = ({ quoteId, recordId, onConfirm, onRequestRevision }
               className="bg-success hover:bg-success/90 text-success-foreground h-11 sm:h-10 text-sm sm:text-base order-1 sm:order-2"
             >
               <CheckCircle className="h-4 w-4 mr-2 flex-shrink-0" />
-              <span className="truncate">{isLoading ? "Đang xử lý..." : "Xác nhận báo giá"}</span>
+              <span className="truncate">{isLoading ? "Đang xử lý..." : "Đồng ý báo giá"}</span>
             </Button>
           </div>
 

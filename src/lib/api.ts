@@ -15,6 +15,7 @@ export interface QuoteApiData {
   sale_note?: string;
   quote_file: QuoteFileInfo;
   record_id: string;
+  status?: string;
 }
 
 export interface QuoteApiResponse {

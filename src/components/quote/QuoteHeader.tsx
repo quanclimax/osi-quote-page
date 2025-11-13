@@ -7,7 +7,7 @@ interface QuoteHeaderProps {
   customerName: string;
   companyName: string;
   date: string;
-  status: "pending" | "confirmed" | "revision_requested";
+  status: "waiting" | "confirmed" | "revision_requested";
 }
 
 export const QuoteHeader = ({ 
@@ -18,7 +18,7 @@ export const QuoteHeader = ({
   status 
 }: QuoteHeaderProps) => {
   const statusConfig = {
-    pending: { label: "Chờ xác nhận", variant: "secondary" as const },
+    waiting: { label: "Chờ xác nhận", variant: "secondary" as const },
     confirmed: { label: "Đã xác nhận", variant: "success" as const },
     revision_requested: { label: "Yêu cầu điều chỉnh", variant: "warning" as const }
   };

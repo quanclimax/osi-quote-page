@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/ui/header";
@@ -6,9 +6,33 @@ import { QuoteHeader } from "@/components/quote/QuoteHeader";
 import { PdfViewer } from "@/components/quote/PdfViewer";
 import { QuoteNotes } from "@/components/quote/QuoteNotes";
 import { QuoteActions } from "@/components/quote/QuoteActions";
+import { QuoteSuccessDialog } from "@/components/quote/QuoteSuccessDialog";
 import { fetchQuoteById } from "@/lib/api";
 
-type QuoteStatus = "pending" | "confirmed" | "revision_requested";
+
+
+
+type QuoteStatus = "waiting" | "confirmed" | "revision_requested";
+
+const mapQuoteStatus = (status?: string): QuoteStatus => {
+  if (!status) return "waiting";
+
+  const normalized = status;
+
+  if (
+    normalized === "Đã xác nhận"
+  ) {
+    return "confirmed";
+  }
+
+  if (
+    normalized === "Yêu cầu điều chỉnh"
+  ) {
+    return "revision_requested";
+  }
+
+  return "waiting";
+};
 
 export default function Quote() {
   const { recordId } = useParams();
@@ -40,10 +64,34 @@ export default function Quote() {
     };
   }, [data]);
 
-  const [currentStatus, setCurrentStatus] = useState<QuoteStatus>("pending");
+  const [currentStatus, setCurrentStatus] = useState<QuoteStatus>(() => 
+    mapQuoteStatus(data?.status)
+  );
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const previousStatusRef = useRef<QuoteStatus>("waiting");
+
+  useEffect(() => {
+    const nextStatus = mapQuoteStatus(data?.status);
+
+    if (data?.status !== undefined) {
+      console.log("Quote API status:", data.status);
+    }
+
+    if (
+      previousStatusRef.current !== "confirmed" &&
+      nextStatus === "confirmed"
+    ) {
+      setShowSuccessDialog(true);
+    }
+
+    previousStatusRef.current = nextStatus;
+    setCurrentStatus(nextStatus);
+  }, [data?.status]);
 
   const handleConfirm = (message?: string) => {
     setCurrentStatus("confirmed");
+    setShowSuccessDialog(true);
+    previousStatusRef.current = "confirmed";
     console.log("Quote confirmed with message:", message);
   };
 
@@ -55,7 +103,7 @@ export default function Quote() {
   return (
     <div className="min-h-screen bg-muted/30">
       <Header />
-      
+
       <main className="container mx-auto px-0 sm:px-4 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6 lg:space-y-8">
         {isLoading && (
           <div className="mx-2 sm:mx-0 text-sm text-muted-foreground">Đang tải dữ liệu báo giá...</div>
@@ -77,7 +125,7 @@ export default function Quote() {
 
         {mapped && <QuoteNotes notes={mapped.saleNote} />}
 
-        {mapped && currentStatus === "pending" && (
+        {mapped && currentStatus === "waiting" && (
           <QuoteActions
             quoteId={mapped.id}
             recordId={mapped.recordId}
@@ -114,6 +162,7 @@ export default function Quote() {
           </div>
         )}
       </main>
+      <QuoteSuccessDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog} />
     </div>
   );
 }
