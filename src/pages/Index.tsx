@@ -20,7 +20,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-light via-background to-primary-light/30">
       <Header />
-      
+
       <main className="container mx-auto px-4 py-16">
         {/* Hero Section */}
         <div className="text-center mb-16">
@@ -31,7 +31,7 @@ const Index = () => {
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
             Truy cập và quản lý báo giá thiết bị khoa học một cách nhanh chóng và hiệu quả
           </p>
-          
+
           {/* Quote Access Form */}
           <Card className="max-w-md mx-auto border-primary/20 shadow-xl">
             <CardHeader>
@@ -51,7 +51,7 @@ const Index = () => {
                   onKeyDown={(e) => e.key === 'Enter' && handleQuoteAccess()}
                 />
               </div>
-              <Button 
+              <Button
                 onClick={handleQuoteAccess}
                 disabled={!quoteId.trim()}
                 className="w-full"
@@ -60,8 +60,8 @@ const Index = () => {
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
               <p className="text-sm text-muted-foreground">
-                Hoặc thử với mã mẫu: 
-                <Link 
+                Hoặc thử với mã mẫu:
+                <Link
                   to="/quote/MT20250926-175521"
                   className="text-primary hover:underline ml-1"
                 >
@@ -118,22 +118,22 @@ const Index = () => {
               <div>
                 <h3 className="text-2xl font-bold text-primary mb-4">Về O.S.I</h3>
                 <p className="text-muted-foreground mb-4">
-                  Công ty TNHH Thiết bị Khoa học Lan Oanh (O.S.I CO., LTD) là đơn vị hàng đầu 
-                  trong lĩnh vực cung cấp thiết bị khoa học, phòng thí nghiệm, và giải pháp 
+                  Công ty TNHH Thiết bị Khoa học Lan Oanh (O.S.I CO. LTD) là đơn vị hàng đầu
+                  trong lĩnh vực cung cấp thiết bị khoa học, phòng thí nghiệm, và giải pháp
                   công nghệ cho các doanh nghiệp F&B, công nghiệp thực phẩm.
                 </p>
                 <p className="text-primary font-medium italic">
-                  "Your Customized Solutions"
+                  "Your Customized Scientific Solutions"
                 </p>
               </div>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Mail className="h-5 w-5 text-primary" />
-                  <span>sale.osi@osi.vn</span>
+                  <span>sales.admin@osi.vn</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="h-5 w-5 text-primary" />
-                  <span>0283 845 8289 | 0283 990 0325</span>
+                  <span>028 3845 8289 | 028 3990 0325</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Globe className="h-5 w-5 text-primary" />

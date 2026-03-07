@@ -1,4 +1,4 @@
-import { Building2, Mail, Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 export const Header = () => {
   return (
@@ -6,27 +6,26 @@ export const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="bg-white/10 p-2 rounded-lg">
-              <Building2 className="h-8 w-8" />
+            <div className="">
+              <img src="/logo2025.webp" alt="O.S.I Logo" className="h-12 w-auto filter brightness-0 invert" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold">O.S.I CO., LTD</h1>
-              <p className="text-primary-light text-sm">
+            <div className="flex flex-col pl-2 border-l-2 border-white mt-4">
+              <p className="text-white text-sm font-bold">
                 Công ty TNHH Thiết bị Khoa học Lan Oanh
               </p>
               <p className="text-primary-light text-xs italic">
-                "Your Customized Solutions"
+                "Your Customized Scientific Solutions"
               </p>
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-6 text-sm">
             <div className="flex items-center space-x-2">
               <Mail className="h-4 w-4" />
-              <span>sale.osi@osi.vn</span>
+              <span>sales.admin@osi.vn</span>
             </div>
             <div className="flex items-center space-x-2">
               <Phone className="h-4 w-4" />
-              <span>0283 845 8289</span>
+              <span>028 3845 8289</span>
             </div>
           </div>
         </div>
